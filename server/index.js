@@ -33,12 +33,8 @@ if (process.env.NODE_ENV === 'production') {
     const distPath = path.join(__dirname, '../client/dist');
     app.use(express.static(distPath));
 
-    /**
-     * FIXED CATCH-ALL ROUTE
-     * The syntax '(*)' or '(:any*)' with parentheses is deprecated in path-to-regexp v8.
-     * Use '/:any*' to capture all remaining paths for Single Page Application (SPA) routing.
-     */
-    app.get('/:any*', (req, res) => {
+    // Catch-all for SPA routing (Express 5 / path-to-regexp v8 syntax)
+    app.get('/{*any}', (req, res) => {
         res.sendFile(path.resolve(distPath, 'index.html'));
     });
 } else {
