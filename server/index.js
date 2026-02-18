@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log('MongoDB connection error:', err));
 
-// Routes
+// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/expenses', require('./routes/expenses'));
 app.use('/api/analytics', require('./routes/analytics'));
@@ -26,17 +27,22 @@ app.use('/api/chat', require('./routes/chat'));
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/subscriptions', require('./routes/subscriptions'));
 
-const path = require('path');
-
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
-    // Set static folder
-    app.use(express.static(path.join(__dirname, '../client/dist')));
+    // 1. Set the static folder for compiled frontend assets
+    const distPath = path.join(__dirname, '../client/dist');
+    app.use(express.static(distPath));
 
-    app.get('(*)', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
+    /**
+     * FIXED CATCH-ALL ROUTE
+     * The syntax '(*)' or '(:any*)' with parentheses is deprecated in path-to-regexp v8.
+     * Use '/:any*' to capture all remaining paths for Single Page Application (SPA) routing.
+     */
+    app.get('/:any*', (req, res) => {
+        res.sendFile(path.resolve(distPath, 'index.html'));
     });
 } else {
+    // Basic root route for development
     app.get('/', (req, res) => {
         res.send('API is running...');
     });
@@ -45,7 +51,10 @@ if (process.env.NODE_ENV === 'production') {
 // Global Error Handler
 app.use((err, req, res, next) => {
     console.error('Unhandled Server Error:', err);
-    res.status(500).send('Server Error: ' + err.message);
+    res.status(500).json({
+        message: 'Server Error',
+        error: process.env.NODE_ENV === 'production' ? {} : err.message
+    });
 });
 
 app.listen(PORT, () => {
