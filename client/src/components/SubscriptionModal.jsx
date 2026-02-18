@@ -82,7 +82,8 @@ const SubscriptionModal = ({ onClose }) => {
 
         } catch (err) {
             console.error('Payment Error', err);
-            alert('Something went wrong. Please try again.');
+            const msg = err.response?.data?.msg || err.message || 'Something went wrong';
+            alert(`Payment Failed: ${msg}`);
         } finally {
             setLoading(false);
         }

@@ -26,9 +26,23 @@ app.use('/api/chat', require('./routes/chat'));
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/subscriptions', require('./routes/subscriptions'));
 
-app.get('/', (req, res) => {
-    res.send('API is running...');
-});
+const path = require('path');
+
+// ... (keep routes) ...
+
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static(path.join(__dirname, '../client/dist')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.send('API is running...');
+    });
+}
 
 // Global Error Handler
 app.use((err, req, res, next) => {

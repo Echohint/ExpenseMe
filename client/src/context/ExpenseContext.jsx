@@ -22,7 +22,7 @@ export const ExpenseProvider = ({ children }) => {
         if (!token) return;
         try {
             setLoading(true);
-            const res = await axios.get('http://localhost:5000/api/expenses', { params: filters });
+            const res = await axios.get('/api/expenses', { params: filters });
             setExpenses(res.data);
         } catch (err) {
             console.error('Error fetching expenses:', err);
@@ -34,7 +34,7 @@ export const ExpenseProvider = ({ children }) => {
     const getAnalytics = async () => {
         if (!token) return;
         try {
-            const res = await axios.get('http://localhost:5000/api/analytics');
+            const res = await axios.get('/api/analytics');
             setAnalytics(res.data);
         } catch (err) {
             console.error('Error fetching analytics:', err);
@@ -43,7 +43,7 @@ export const ExpenseProvider = ({ children }) => {
 
     const addExpense = async (expenseData) => {
         try {
-            const res = await axios.post('http://localhost:5000/api/expenses', expenseData);
+            const res = await axios.post('/api/expenses', expenseData);
             setExpenses([res.data, ...expenses]);
             getAnalytics(); // Refresh analytics
             return true;
@@ -55,7 +55,7 @@ export const ExpenseProvider = ({ children }) => {
 
     const deleteExpense = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/api/expenses/${id}`);
+            await axios.delete(`/api/expenses/${id}`);
             setExpenses(expenses.filter(exp => exp._id !== id));
             getAnalytics();
         } catch (err) {

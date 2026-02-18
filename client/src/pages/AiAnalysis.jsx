@@ -2,13 +2,13 @@ import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import { useExpenses } from '../context/ExpenseContext';
 import { useAuth } from '../context/AuthContext';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Filler } from 'chart.js';
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
 import { Lock, Crown } from 'lucide-react';
 import SubscriptionModal from '../components/SubscriptionModal';
 import { useState } from 'react';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title);
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Filler);
 
 const AiAnalysis = () => {
     const { analytics } = useExpenses();
