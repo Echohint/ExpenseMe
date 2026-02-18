@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path'); // Moved to the top
 
 dotenv.config();
 
@@ -26,14 +27,13 @@ app.use('/api/chat', require('./routes/chat'));
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/subscriptions', require('./routes/subscriptions'));
 
-const path = require('path');
-
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
     // Set static folder
     app.use(express.static(path.join(__dirname, '../client/dist')));
 
-    app.get('(*)', (req, res) => {
+    // FIXED: Changed '(*)' to '(:any*)' to support new path-to-regexp versions
+    app.get('(:any*)', (req, res) => {
         res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
     });
 } else {
