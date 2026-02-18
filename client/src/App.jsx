@@ -4,8 +4,6 @@ import { ExpenseProvider } from './context/ExpenseContext';
 import { ThemeProvider } from './context/ThemeContext';
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import History from './pages/History';
 import Analytics from './pages/Analytics';
 import AiAnalysis from './pages/AiAnalysis';
@@ -19,7 +17,7 @@ const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
   if (loading) return <div>Loading...</div>;
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/" />;
 };
 
 function App() {
@@ -30,9 +28,6 @@ function App() {
           <Router>
             <div style={{ position: 'relative' }}>
               <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-
                 <Route path="/" element={<Landing />} />
 
                 <Route path="/dashboard" element={
@@ -73,6 +68,9 @@ function App() {
                     <DataPortability />
                   </PrivateRoute>
                 } />
+
+                {/* Catch all - redirect to home */}
+                <Route path="*" element={<Navigate to="/" />} />
 
               </Routes>
               <AiChatbot />

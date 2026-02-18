@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Wallet, PieChart, Shield, ArrowRight, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 import LoginModal from '../components/LoginModal';
 import RegisterModal from '../components/RegisterModal';
@@ -9,6 +10,7 @@ const Landing = () => {
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
     const { theme, toggleTheme } = useTheme();
+    const { user } = useAuth();
 
     return (
         <div style={{ minHeight: '100vh', background: 'var(--bg-body)', display: 'flex', flexDirection: 'column' }}>
@@ -24,8 +26,14 @@ const Landing = () => {
                     <button onClick={toggleTheme} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', padding: '0.5rem' }}>
                         {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                     </button>
-                    <button onClick={() => setShowLogin(true)} className="btn" style={{ color: 'var(--text-secondary)', background: 'transparent' }}>Log In</button>
-                    <button onClick={() => setShowRegister(true)} className="btn btn-primary">Get Started</button>
+                    {user ? (
+                        <Link to="/dashboard" className="btn btn-primary" style={{ textDecoration: 'none' }}>Dashboard</Link>
+                    ) : (
+                        <>
+                            <button onClick={() => setShowLogin(true)} className="btn" style={{ color: 'var(--text-secondary)', background: 'transparent' }}>Log In</button>
+                            <button onClick={() => setShowRegister(true)} className="btn btn-primary">Get Started</button>
+                        </>
+                    )}
                 </div>
             </nav>
 
@@ -38,12 +46,20 @@ const Landing = () => {
                     Track expenses, analyze spending habits, and achieve your financial goals with our premium, easy-to-use expense tracker.
                 </p>
                 <div style={{ display: 'flex', gap: '1rem', marginBottom: '4rem' }}>
-                    <button onClick={() => setShowRegister(true)} className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
-                        Start Tracking Free <ArrowRight size={20} />
-                    </button>
-                    <button onClick={() => setShowLogin(true)} className="btn" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', padding: '1rem 2rem', fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                        View Demo
-                    </button>
+                    {user ? (
+                        <Link to="/dashboard" className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            Go to Dashboard <ArrowRight size={20} />
+                        </Link>
+                    ) : (
+                        <>
+                            <button onClick={() => setShowRegister(true)} className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
+                                Start Tracking Free <ArrowRight size={20} />
+                            </button>
+                            <button onClick={() => setShowLogin(true)} className="btn" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', padding: '1rem 2rem', fontSize: '1.1rem', color: 'var(--text-primary)' }}>
+                                View Demo
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 {/* Features */}
