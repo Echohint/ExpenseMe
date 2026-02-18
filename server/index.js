@@ -28,8 +28,6 @@ app.use('/api/subscriptions', require('./routes/subscriptions'));
 
 const path = require('path');
 
-// ... (keep routes) ...
-
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
     // Set static folder
